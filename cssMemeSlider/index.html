@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Meme Slider</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!--
+    CSS-only slider technique:
+    Hidden radio inputs placed BEFORE main so that
+    the general sibling combinator (~) can reach
+    <main> and all elements inside it.
+  -->
+  <input type="radio" name="slider" id="s1" checked>
+  <input type="radio" name="slider" id="s2">
+  <input type="radio" name="slider" id="s3">
+  <input type="radio" name="slider" id="s4">
+  <input type="radio" name="slider" id="s5">
+
+  <header>
+    <h1>CSS Meme Slider</h1>
+    <p class="subtitle">Pure HTML &amp; CSS &mdash; no JavaScript!</p>
+  </header>
+
+  <main>
+    <div class="slider-wrapper">
+
+      <!-- ===== Images ===== -->
+      <div class="slides">
+        <div class="slide slide-1">
+          <img
+            src="1.jpg"
+            alt="Кот-бот"
+          >
+        </div>
+        <div class="slide slide-2">
+          <img
+            src="2.jpg"
+            alt="Бульбафюрер из будущего"
+          >
+        </div>
+        <div class="slide slide-3">
+          <img
+            src="3.jpg"
+            alt="На самом деле, я вам сейчас покажу откуда готовилось нападение..."
+          >
+        </div>
+        <div class="slide slide-4">
+          <img
+            src="4.jpg"
+            alt="Два дебила - это сила!"
+          >
+        </div>
+        <div class="slide slide-5">
+          <img
+            src="5.jpg"
+            alt="Черемша"
+          >
+        </div>
+      </div>
+
+      <!-- ===== Captions — plain text, NOT embedded in images ===== -->
+      <div class="captions">
+        <p class="caption caption-1">Кот-бот</p>
+        <p class="caption caption-2">Бульбафюрер из будущего</p>
+        <p class="caption caption-3">А я вам сейчас покажу откуда готовилось нападение...</p>
+        <p class="caption caption-4">FUCK - TRUMP!</p>
+        <p class="caption caption-5">Черемша</p>
+      </div>
+
+      <!-- ===== Controls ===== -->
+      <nav class="controls" aria-label="Slider navigation">
+        <label for="s1" title="Slide 1"><span></span></label>
+        <label for="s2" title="Slide 2"><span></span></label>
+        <label for="s3" title="Slide 3"><span></span></label>
+        <label for="s4" title="Slide 4"><span></span></label>
+        <label for="s5" title="Slide 5"><span></span></label>
+      </nav>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>CSS Meme Slider &mdash; RS School Bootcamp 2026</p>
+  </footer>
+
+</body>
+</html>
