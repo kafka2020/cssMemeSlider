@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <!-- Hidden radio inputs — the engine of the CSS-only slider -->
+  <!-- Hidden radio inputs — CSS-only slider engine via :checked + ~ selector -->
   <input type="radio" name="slider" id="s1" checked>
   <input type="radio" name="slider" id="s2">
   <input type="radio" name="slider" id="s3">
@@ -25,46 +25,46 @@
 
       <!-- Images -->
       <div class="slides">
-        <div class="slide">
+        <div class="slide slide-1">
           <img src="https://i.imgur.com/WjhrpCU.jpeg" alt="Meme 1: One does not simply">
         </div>
-        <div class="slide">
+        <div class="slide slide-2">
           <img src="https://i.imgur.com/6e1Sw7r.jpeg" alt="Meme 2: This is fine">
         </div>
-        <div class="slide">
+        <div class="slide slide-3">
           <img src="https://i.imgur.com/dHDFIJQ.jpeg" alt="Meme 3: Drake">
         </div>
-        <div class="slide">
+        <div class="slide slide-4">
           <img src="https://i.imgur.com/cKZpKCw.jpeg" alt="Meme 4: Distracted boyfriend">
         </div>
-        <div class="slide">
+        <div class="slide slide-5">
           <img src="https://i.imgur.com/0x0H8lT.jpeg" alt="Meme 5: Success kid">
         </div>
       </div>
 
-      <!-- Captions — plain text, not embedded in images -->
+      <!-- Captions — plain text, NOT embedded in images -->
       <div class="captions">
-        <p class="caption">One does not simply walk into Mordor... but CSS can slide there</p>
-        <p class="caption">This is fine. Everything is fine. CSS animations work.</p>
-        <p class="caption">Using JavaScript for a slider... using pure CSS instead</p>
-        <p class="caption">Writing CSS at 2am... fixing CSS at 3am</p>
-        <p class="caption">Finally centered a div on the first try!</p>
+        <p class="caption caption-1">One does not simply walk into Mordor... but CSS can slide there</p>
+        <p class="caption caption-2">This is fine. Everything is fine. CSS animations work perfectly.</p>
+        <p class="caption caption-3">Using JavaScript for a slider... using pure CSS instead</p>
+        <p class="caption caption-4">Writing CSS at 2am... fixing CSS at 3am</p>
+        <p class="caption caption-5">Finally centered a div on the first try!</p>
       </div>
 
       <!-- Controls -->
       <div class="controls">
-        <label for="s1" title="Slide 1"><span>1</span></label>
-        <label for="s2" title="Slide 2"><span>2</span></label>
-        <label for="s3" title="Slide 3"><span>3</span></label>
-        <label for="s4" title="Slide 4"><span>4</span></label>
-        <label for="s5" title="Slide 5"><span>5</span></label>
+        <label for="s1" title="Slide 1"><span></span></label>
+        <label for="s2" title="Slide 2"><span></span></label>
+        <label for="s3" title="Slide 3"><span></span></label>
+        <label for="s4" title="Slide 4"><span></span></label>
+        <label for="s5" title="Slide 5"><span></span></label>
       </div>
 
     </div>
   </main>
 
   <footer>
-    <p>CSS Meme Slider &mdash; RS School Bootcamp 2026</p>
+    <p>CSS Meme Slider — RS School Bootcamp 2026</p>
   </footer>
 
 </body>

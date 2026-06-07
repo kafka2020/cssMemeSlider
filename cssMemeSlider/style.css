@@ -15,12 +15,11 @@
   --clr-bg: #0f0f13;
   --clr-card: #1a1a24;
   --clr-accent: #f5c518;
-  --clr-accent2: #e040fb;
   --clr-text: #f0f0f0;
-  --clr-muted: #888;
+  --clr-muted: #666;
   --radius: 1rem;
-  --transition: 0.45s cubic-bezier(0.4, 0, 0.2, 1);
-  --slider-w: min(52rem, 92vw);
+  --duration: 0.5s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ---------- Hide radio inputs ---------- */
@@ -31,7 +30,6 @@ input[type="radio"] {
 /* ---------- Base ---------- */
 html {
   font-size: 16px;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -52,51 +50,55 @@ header {
 }
 
 header h1 {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
   color: var(--clr-accent);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .subtitle {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: var(--clr-muted);
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
 }
 
-/* ---------- Main / Slider Wrapper ---------- */
+/* ---------- Main ---------- */
 main {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
+/* ---------- Slider Wrapper ---------- */
 .slider-wrapper {
-  width: var(--slider-w);
+  width: min(52rem, 92vw);
   display: grid;
-  grid-template-rows: auto auto auto;
-  grid-template-columns: 1fr;
   grid-template-areas:
     "slides"
     "captions"
     "controls";
+  grid-template-rows: auto auto auto;
+  grid-template-columns: 1fr;
   gap: 1.25rem;
   background: var(--clr-card);
   border-radius: var(--radius);
   padding: 1.5rem;
-  box-shadow: 0 0.5rem 3rem rgba(0,0,0,0.6);
+  box-shadow: 0 0.5rem 3rem rgba(0, 0, 0, 0.6);
 }
 
-/* ---------- Slides ---------- */
+/* ---------- Slides container ---------- */
 .slides {
   grid-area: slides;
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
   overflow: hidden;
   border-radius: calc(var(--radius) * 0.6);
   aspect-ratio: 16 / 9;
 }
 
+/* All slides stacked in same grid cell */
 .slide {
   grid-row: 1;
   grid-column: 1;
@@ -104,8 +106,7 @@ main {
   justify-content: center;
   align-items: center;
   opacity: 0;
-  animation: none;
-  /* Slides stack on top of each other via grid */
+  transition: opacity var(--duration) var(--ease);
 }
 
 .slide img {
@@ -116,25 +117,26 @@ main {
   display: block;
 }
 
-/* ---------- Captions ---------- */
+/* ---------- Captions container ---------- */
 .captions {
   grid-area: captions;
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
 .caption {
   grid-row: 1;
   grid-column: 1;
   text-align: center;
-  font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+  font-size: clamp(0.85rem, 2.2vw, 1.05rem);
   color: var(--clr-text);
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: calc(var(--radius) * 0.5);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.25rem;
+  line-height: 1.6;
   opacity: 0;
-  animation: none;
-  line-height: 1.5;
+  transition: opacity var(--duration) var(--ease);
 }
 
 /* ---------- Controls ---------- */
@@ -142,114 +144,131 @@ main {
   grid-area: controls;
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .controls label {
+  /* Large clickable area — bigger than the visual dot */
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Large clickable area — bigger than visual dot */
   width: 2.5rem;
   height: 2.5rem;
-  cursor: pointer;
   border-radius: 50%;
-  transition:
-    background var(--transition),
-    transform 0.15s ease;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease), transform 0.15s ease;
 }
 
 .controls label span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 0.75rem;
-  height: 0.75rem;
+  display: block;
+  width: 0.65rem;
+  height: 0.65rem;
   background: var(--clr-muted);
   border-radius: 50%;
-  transition: background var(--transition), width 0.2s, height 0.2s;
+  transition:
+    background var(--duration) var(--ease),
+    width 0.2s ease,
+    height 0.2s ease;
   pointer-events: none;
 }
 
 /* Hover state */
 .controls label:hover span {
   background: var(--clr-text);
-  width: 1rem;
-  height: 1rem;
+  width: 0.85rem;
+  height: 0.85rem;
 }
 
 /* Active / pressed state */
 .controls label:active {
-  transform: scale(0.85);
+  transform: scale(0.82);
 }
 
-/* ---------- Active slide logic via :checked ---------- */
+/* =====================================================
+   ACTIVE SLIDE LOGIC — input:checked + ~ siblings
+   ===================================================== */
 
-/* Slide 1 */
-#s1:checked ~ main .slide:nth-child(1),
-#s1:checked ~ main .caption:nth-child(1) {
+/* Slide 1 active */
+#s1:checked ~ main .slide-1 {
   opacity: 1;
-  animation: fadeSlide var(--transition) ease;
+  animation: fadeIn var(--duration) var(--ease);
+}
+#s1:checked ~ main .caption-1 {
+  opacity: 1;
+  animation: fadeIn var(--duration) var(--ease);
 }
 #s1:checked ~ main .controls label[for="s1"] span {
   background: var(--clr-accent);
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
-/* Slide 2 */
-#s2:checked ~ main .slide:nth-child(2),
-#s2:checked ~ main .caption:nth-child(2) {
+/* Slide 2 active */
+#s2:checked ~ main .slide-2 {
   opacity: 1;
-  animation: fadeSlide var(--transition) ease;
+  animation: fadeIn var(--duration) var(--ease);
+}
+#s2:checked ~ main .caption-2 {
+  opacity: 1;
+  animation: fadeIn var(--duration) var(--ease);
 }
 #s2:checked ~ main .controls label[for="s2"] span {
   background: var(--clr-accent);
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
-/* Slide 3 */
-#s3:checked ~ main .slide:nth-child(3),
-#s3:checked ~ main .caption:nth-child(3) {
+/* Slide 3 active */
+#s3:checked ~ main .slide-3 {
   opacity: 1;
-  animation: fadeSlide var(--transition) ease;
+  animation: fadeIn var(--duration) var(--ease);
+}
+#s3:checked ~ main .caption-3 {
+  opacity: 1;
+  animation: fadeIn var(--duration) var(--ease);
 }
 #s3:checked ~ main .controls label[for="s3"] span {
   background: var(--clr-accent);
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
-/* Slide 4 */
-#s4:checked ~ main .slide:nth-child(4),
-#s4:checked ~ main .caption:nth-child(4) {
+/* Slide 4 active */
+#s4:checked ~ main .slide-4 {
   opacity: 1;
-  animation: fadeSlide var(--transition) ease;
+  animation: fadeIn var(--duration) var(--ease);
+}
+#s4:checked ~ main .caption-4 {
+  opacity: 1;
+  animation: fadeIn var(--duration) var(--ease);
 }
 #s4:checked ~ main .controls label[for="s4"] span {
   background: var(--clr-accent);
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
-/* Slide 5 */
-#s5:checked ~ main .slide:nth-child(5),
-#s5:checked ~ main .caption:nth-child(5) {
+/* Slide 5 active */
+#s5:checked ~ main .slide-5 {
   opacity: 1;
-  animation: fadeSlide var(--transition) ease;
+  animation: fadeIn var(--duration) var(--ease);
+}
+#s5:checked ~ main .caption-5 {
+  opacity: 1;
+  animation: fadeIn var(--duration) var(--ease);
 }
 #s5:checked ~ main .controls label[for="s5"] span {
   background: var(--clr-accent);
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
-/* ---------- Keyframe animations ---------- */
-@keyframes fadeSlide {
+/* ---------- @keyframes ---------- */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(0.6rem);
+    transform: translateY(0.5rem);
   }
   to {
     opacity: 1;
@@ -265,23 +284,27 @@ footer {
   padding-bottom: 1rem;
 }
 
-/* ==============================================
-   RESPONSIVE — Mobile (checked at 500px min)
-   ============================================== */
+/* =======================================
+   RESPONSIVE — Mobile (min-width: 500px)
+   ======================================= */
 @media (max-width: 600px) {
   body {
     padding: 1rem 0.5rem;
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .slider-wrapper {
     padding: 1rem;
-    gap: 1rem;
+    gap: 0.875rem;
     border-radius: 0.75rem;
   }
 
   .slides {
     aspect-ratio: 4 / 3;
+  }
+
+  .controls {
+    gap: 0.25rem;
   }
 
   .controls label {
@@ -290,7 +313,7 @@ footer {
   }
 
   .controls label span {
-    width: 0.65rem;
-    height: 0.65rem;
+    width: 0.6rem;
+    height: 0.6rem;
   }
 }
