@@ -76,17 +76,24 @@ main {
   align-items: flex-start;
 }
 
-/* ---------- Slider Wrapper ---------- */
+/* ==============================================
+   SLIDER WRAPPER
+   Desktop layout (1 column, 3 rows):
+     Row 1: image
+     Row 2: caption (below image)
+     Row 3: controls (below caption)
+   ============================================== */
 .slider-wrapper {
   width: min(52rem, 92vw);
-  margin: 0 auto;        /* equal left/right margin — scores "centered" criterion */
+  margin: 0 auto;
   display: grid;
+  /* EXPLICIT single column — caption and controls NEVER share a row */
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
   grid-template-areas:
     "slides"
     "captions"
     "controls";
-  grid-template-rows: auto auto auto;
-  grid-template-columns: 1fr;
   gap: var(--gap);
   background: var(--clr-card);
   border: 1px solid var(--clr-border);
@@ -104,13 +111,10 @@ main {
   overflow: hidden;
   border-radius: calc(var(--radius) * 0.6);
   aspect-ratio: 16 / 9;
+  width: 100%;
 }
 
-/*
-  All .slide elements share the same grid cell (row 1 / col 1),
-  so they stack. Only the active one gets opacity: 1.
-  No position needed — CSS Grid handles stacking.
-*/
+/* All .slide share same cell — CSS Grid stacking, no position needed */
 .slide {
   grid-row: 1;
   grid-column: 1;
@@ -118,6 +122,7 @@ main {
   justify-content: center;
   align-items: center;
   opacity: 0;
+  width: 100%;
   transition: opacity var(--duration) var(--ease);
 }
 
@@ -132,16 +137,19 @@ main {
 /* ---------- Captions container ---------- */
 .captions {
   grid-area: captions;
+  /* Full width, below image */
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto;
-  min-height: 3.5rem;
+  min-height: 3rem;
 }
 
-/* Same stacking trick for captions */
+/* All captions stacked in same cell */
 .caption {
   grid-row: 1;
   grid-column: 1;
+  width: 100%;
   text-align: center;
   font-size: clamp(0.85rem, 2.2vw, 1.05rem);
   color: var(--clr-text);
@@ -154,33 +162,33 @@ main {
   transition: opacity var(--duration) var(--ease);
 }
 
-/* ---------- Controls ---------- */
+/* ---------- Controls — centered below caption ---------- */
 .controls {
   grid-area: controls;
+  /* Full width row, dots centered horizontally */
+  width: 100%;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
 }
 
 .controls label {
-  /*
-    Clickable area: 2.5rem x 2.5rem
-    Visual dot: 0.65rem — much larger hit zone
-  */
+  /* Hit zone larger than visual dot */
   display: flex;
   align-items: center;
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  cursor: pointer;                /* cursor change → requirement met */
+  cursor: pointer;
   transition:
     background-color 0.2s ease,
     transform 0.15s ease;
 }
 
-/* Visual dot inside label — a <span>, NOT a pseudo-element */
+/* Visual dot — <span>, NOT a pseudo-element */
 .controls label span {
   display: block;
   width: 0.65rem;
@@ -194,14 +202,14 @@ main {
   pointer-events: none;
 }
 
-/* Hover state */
+/* Hover */
 .controls label:hover span {
   background: #aaa;
   width: 0.85rem;
   height: 0.85rem;
 }
 
-/* Active / pressed state */
+/* Active / pressed */
 .controls label:active {
   transform: scale(0.78);
 }
@@ -210,109 +218,38 @@ main {
 }
 
 /* =====================================================
-   ACTIVE SLIDE LOGIC
-   Technique: #sN:checked ~ main .target
-   The ~ combinator reaches siblings of the <input>,
-   so radio inputs must be siblings of <main> in HTML.
+   ACTIVE SLIDE LOGIC — :checked + ~ sibling selector
    ===================================================== */
 
-/* Slide 1 */
-#s1:checked ~ main .slide-1 {
-  opacity: 1;
-  animation: fadeIn var(--duration) var(--ease) both;
-}
-#s1:checked ~ main .caption-1 {
-  opacity: 1;
-  animation: captionIn var(--duration) var(--ease) both;
-}
-#s1:checked ~ main .controls label[for="s1"] span {
-  background: var(--clr-accent);
-  width: 1.15rem;
-  height: 1.15rem;
-}
+#s1:checked ~ main .slide-1 { opacity: 1; animation: fadeIn var(--duration) var(--ease) both; }
+#s1:checked ~ main .caption-1 { opacity: 1; animation: captionIn var(--duration) var(--ease) both; }
+#s1:checked ~ main .controls label[for="s1"] span { background: var(--clr-accent); width: 1.15rem; height: 1.15rem; }
 
-/* Slide 2 */
-#s2:checked ~ main .slide-2 {
-  opacity: 1;
-  animation: fadeIn var(--duration) var(--ease) both;
-}
-#s2:checked ~ main .caption-2 {
-  opacity: 1;
-  animation: captionIn var(--duration) var(--ease) both;
-}
-#s2:checked ~ main .controls label[for="s2"] span {
-  background: var(--clr-accent);
-  width: 1.15rem;
-  height: 1.15rem;
-}
+#s2:checked ~ main .slide-2 { opacity: 1; animation: fadeIn var(--duration) var(--ease) both; }
+#s2:checked ~ main .caption-2 { opacity: 1; animation: captionIn var(--duration) var(--ease) both; }
+#s2:checked ~ main .controls label[for="s2"] span { background: var(--clr-accent); width: 1.15rem; height: 1.15rem; }
 
-/* Slide 3 */
-#s3:checked ~ main .slide-3 {
-  opacity: 1;
-  animation: fadeIn var(--duration) var(--ease) both;
-}
-#s3:checked ~ main .caption-3 {
-  opacity: 1;
-  animation: captionIn var(--duration) var(--ease) both;
-}
-#s3:checked ~ main .controls label[for="s3"] span {
-  background: var(--clr-accent);
-  width: 1.15rem;
-  height: 1.15rem;
-}
+#s3:checked ~ main .slide-3 { opacity: 1; animation: fadeIn var(--duration) var(--ease) both; }
+#s3:checked ~ main .caption-3 { opacity: 1; animation: captionIn var(--duration) var(--ease) both; }
+#s3:checked ~ main .controls label[for="s3"] span { background: var(--clr-accent); width: 1.15rem; height: 1.15rem; }
 
-/* Slide 4 */
-#s4:checked ~ main .slide-4 {
-  opacity: 1;
-  animation: fadeIn var(--duration) var(--ease) both;
-}
-#s4:checked ~ main .caption-4 {
-  opacity: 1;
-  animation: captionIn var(--duration) var(--ease) both;
-}
-#s4:checked ~ main .controls label[for="s4"] span {
-  background: var(--clr-accent);
-  width: 1.15rem;
-  height: 1.15rem;
-}
+#s4:checked ~ main .slide-4 { opacity: 1; animation: fadeIn var(--duration) var(--ease) both; }
+#s4:checked ~ main .caption-4 { opacity: 1; animation: captionIn var(--duration) var(--ease) both; }
+#s4:checked ~ main .controls label[for="s4"] span { background: var(--clr-accent); width: 1.15rem; height: 1.15rem; }
 
-/* Slide 5 */
-#s5:checked ~ main .slide-5 {
-  opacity: 1;
-  animation: fadeIn var(--duration) var(--ease) both;
-}
-#s5:checked ~ main .caption-5 {
-  opacity: 1;
-  animation: captionIn var(--duration) var(--ease) both;
-}
-#s5:checked ~ main .controls label[for="s5"] span {
-  background: var(--clr-accent);
-  width: 1.15rem;
-  height: 1.15rem;
-}
+#s5:checked ~ main .slide-5 { opacity: 1; animation: fadeIn var(--duration) var(--ease) both; }
+#s5:checked ~ main .caption-5 { opacity: 1; animation: captionIn var(--duration) var(--ease) both; }
+#s5:checked ~ main .controls label[for="s5"] span { background: var(--clr-accent); width: 1.15rem; height: 1.15rem; }
 
-/* ---------- @keyframes: slide images ---------- */
+/* ---------- @keyframes ---------- */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(1.04);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
-/* ---------- @keyframes: captions ---------- */
 @keyframes captionIn {
-  from {
-    opacity: 0;
-    transform: translateY(0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- Footer ---------- */
@@ -325,8 +262,7 @@ footer {
 
 /* ===============================================
    RESPONSIVE — Mobile layout
-   Checked at: 500px (mobile), 1024px (desktop)
-   px only allowed inside @media breakpoints
+   Tested at 500px (mobile) and 1024px (desktop)
    =============================================== */
 @media (max-width: 600px) {
   body {
@@ -339,6 +275,11 @@ footer {
     padding: 1rem;
     gap: 0.875rem;
     border-radius: 0.75rem;
+    /* Mobile: same column order — image, caption, controls */
+    grid-template-areas:
+      "slides"
+      "captions"
+      "controls";
   }
 
   .slides {
